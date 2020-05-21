@@ -11,6 +11,10 @@ module.exports = (app) => {
   app.post('/recipes',
     RecipeController.post)
 
+  app.put('/recipes/:id',
+    RecipeController.put)
+
+
   app.get('/favourites',
     FavouriteController.index)
 
