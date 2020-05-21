@@ -6,4 +6,7 @@ module.exports = (app) => {
   
   app.get('/recipes/:id',
     RecipeController.show)
+
+  app.post('/recipes',
+    RecipeController.post)
 }
