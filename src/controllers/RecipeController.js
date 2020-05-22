@@ -80,7 +80,7 @@ module.exports = {
       let id = await knex('ingredients')
         .where({ name: ingredient.name })
         .select('id')
-        .first();
+        .first()
         .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
       // The ingredient was in the database
@@ -93,7 +93,7 @@ module.exports = {
       } else {
         id = await knex('ingredients')
           .returning('id')
-          .insert({ name: ingredient.name });
+          .insert({ name: ingredient.name })
           .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
         id = id[0];
@@ -175,7 +175,7 @@ module.exports = {
       } else {
         id = await knex('ingredients')
           .returning('id')
-          .insert({ name: ingredient.name });
+          .insert({ name: ingredient.name })
           .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
         id = id[0];
