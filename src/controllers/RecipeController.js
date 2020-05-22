@@ -1,35 +1,53 @@
 const knex = require('../db/knex');
 
+function sendInternalError(res, err, method) {
+  res.status(500).send({
+    error:`${method} internal error: ${err}`
+  })
+}
+
 module.exports = {
-  // get all recipes
+  // Get all recipes
   async index (req, res) {
-    const rows = await knex('recipes').select();
-    res.send(rows);
+    const rows = await knex('recipes').select()
+      .catch(err => sendInternalError(res, err, 'Recipe.index'))
+
+    res.send(rows)
   },
 
   // Show a whole recipe
  async show(req, res) {
    const id = req.params.id;
-   const recipeInfo = await knex('recipes').where({ id }).select('name', 'image_url').first();
+
+   // Get Recipe Info
+   const recipeInfo = await
+     knex('recipes')
+      .where({ id })
+      .select('name', 'image_url')
+      .first()
+      .catch(err => sendInternalError(res, err, 'Recipe.post'))
+   
 
    const ingredients = await 
      knex('recipe_ingredients')
       .join('ingredients', 'recipe_ingredients.ingredient_id', '=', 'ingredients.id')
       .where({ recipe_id: id })
       .select('amount', 'unit', 'name')
+      .catch(err => sendInternalError(res, err, 'Recipe.post'))
+
 
    const instructions = await 
      knex('recipes')
       .join('recipe_instructions', 'recipes.id', '=', 'recipe_instructions.recipe_id')
       .where({ id })
       .select('step', 'step_description')
+      .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
    const recipe = {
      recipeInfo,
      ingredients,
      instructions
    }
-
     res.send(recipe)
   },
 
@@ -48,7 +66,8 @@ module.exports = {
         .insert({ 
           name: recipe.recipeInfo.name,  
           image_url: recipe.recipeInfo.image_url
-        });
+        })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
     const recipe_id = id[0];
 
@@ -62,6 +81,7 @@ module.exports = {
         .where({ name: ingredient.name })
         .select('id')
         .first();
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
       // The ingredient was in the database
       // returns an object { id: n }, convert to number
@@ -74,6 +94,7 @@ module.exports = {
         id = await knex('ingredients')
           .returning('id')
           .insert({ name: ingredient.name });
+          .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
         id = id[0];
       }
@@ -88,6 +109,7 @@ module.exports = {
           amount: ingredient.amount,
           unit: ingredient.unit
         })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
     }
 
     // 4. Add each instruction --------------------------------------------------
@@ -99,6 +121,8 @@ module.exports = {
           step: index+1,
           step_description: instruction.step_description
         })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
+
     }
 
     res.status(201).send();
@@ -120,12 +144,14 @@ module.exports = {
         .update({ 
           name: recipe.recipeInfo.name,  
           image_url: recipe.recipeInfo.image_url
-        });
+        })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
     // 2. Remove existing recipe ingredients ----------------------------------
     await knex('recipe_ingredients')
       .where('recipe_id', '=', recipe_id)
-      .del();
+      .del()
+      .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
     // 3. Add necessary new ingredients to ingredients table ------------------
     
@@ -136,7 +162,8 @@ module.exports = {
       let id = await knex('ingredients')
         .where({ name: ingredient.name })
         .select('id')
-        .first();
+        .first()
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
       // The ingredient was in the database
       // returns an object { id: n }, convert to number
@@ -149,6 +176,7 @@ module.exports = {
         id = await knex('ingredients')
           .returning('id')
           .insert({ name: ingredient.name });
+          .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
         id = id[0];
       }
@@ -163,6 +191,7 @@ module.exports = {
           amount: ingredient.amount,
           unit: ingredient.unit
         })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
     }
 
     // 5. Update each instruction --------------------------------------------------
@@ -171,6 +200,7 @@ module.exports = {
     await knex('recipe_instructions')
       .where('recipe_id', '=', recipe_id)
       .del()
+      .catch(err => sendInternalError(res, err, 'Recipe.post'))
 
     // Add them back in again
     for (const [index, instruction] of recipe.instructions.entries()) {
@@ -180,6 +210,7 @@ module.exports = {
           step: index+1,
           step_description: instruction.step_description
         })
+        .catch(err => sendInternalError(res, err, 'Recipe.post'))
     }
 
     res.status(201).send();
