@@ -1,6 +1,7 @@
 
 exports.up = function(knex) {
   return knex.schema.createTable('favourites', (table) => {
+    table.increments()
     table.integer('recipe_id')
     // username
 
