@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.integer('recipe_id')
     table.integer('ingredient_id')
     table.text('amount')
-    table.integer('unit')
+    table.text('unit')
 
     table.foreign('recipe_id').references('id').inTable('recipes')
     table.foreign('ingredient_id').references('id').inTable('ingredients')
