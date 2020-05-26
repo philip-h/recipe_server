@@ -7,14 +7,28 @@ module.exports = {
     connection: {
       filename: './dev.sqlite3'
     },
-    useNullAsDefault: true
-  },
-  production: {
-    client: 'sqlite3',
-    connection: {
-      filename: './production.sqlite3'
+    useNullAsDefault: true,
+    migrations: {
+      directory: './src/db/migrations',
     },
-    useNullAsDefault: true
+    seeds: {
+      directory: './src/db/seeds'
+    }
+  },
+
+  production: {
+    client: 'postgresql',
+    connection: process.env.DATABASE_URL,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      directory: './src/db/migrations',
+    },
+    seeds: {
+      directory: './src/db/seeds/production'
+    }
   }
 
 };
