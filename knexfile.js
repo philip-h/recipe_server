@@ -27,7 +27,7 @@ module.exports = {
       directory: './src/db/migrations',
     },
     seeds: {
-      directory: './src/db/seeds/production'
+      directory: './src/db/seeds'
     }
   }
 
