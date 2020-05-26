@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon src/app.js --exec 'npm run lint && node'",
+    "start": "node src/app.js",
+    "startDev": "npx nodemon src/app.js --exec 'npm run lint && node'",
     "lint": "./node_modules/.bin/eslint src/*.js"
   },
   "author": "Philip H <philip.habib6347@gmail.com>",
