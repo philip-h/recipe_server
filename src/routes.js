@@ -1,29 +1,29 @@
-const RecipeController = require('./controllers/RecipeController')
-const FavouriteController = require('./controllers/FavouriteController')
+const RecipeController = require('./controllers/RecipeController');
+const FavouriteController = require('./controllers/FavouriteController');
 
 module.exports = (app) => {
   app.get('/recipes',
-    RecipeController.index)
-  
+      RecipeController.index);
+
   app.get('/recipes/:id',
-    RecipeController.show)
+      RecipeController.show);
 
   app.post('/recipes',
-    RecipeController.post)
+      RecipeController.post);
 
   app.put('/recipes/:id',
-    RecipeController.put)
+      RecipeController.put);
 
 
   app.get('/favourites',
-    FavouriteController.index)
+      FavouriteController.index);
 
   app.get('/favourites/:recipe_id',
-    FavouriteController.show)
+      FavouriteController.show);
 
   app.post('/favourites/:recipe_id',
-    FavouriteController.post)
+      FavouriteController.post);
 
   app.delete('/favourites/:recipe_id',
-    FavouriteController.delete)
-}
+      FavouriteController.delete);
+};
