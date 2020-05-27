@@ -18,7 +18,7 @@ module.exports = {
   async index(req, res) {
     const rows = await knex('recipes').select()
         .catch((err) => sendInternalError(res, err, 'Recipe.index'));
-    if (!rowws) return;
+    if (!rows) return;
 
     res.send(rows);
   },
