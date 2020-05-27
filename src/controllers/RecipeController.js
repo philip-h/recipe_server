@@ -44,7 +44,7 @@ module.exports = {
             '=',
             'ingredients.id',
         )
-        .where({recipeId: id})
+        .where({recipe_id: id})
         .select('amount', 'unit', 'name')
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     if (!ingredients) return;
@@ -56,7 +56,7 @@ module.exports = {
             'recipe_instructions',
             'recipes.id',
             '=',
-            'recipe_instructions.recipeId',
+            'recipe_instructions.recipe_id',
         )
         .where({id})
         .select('step', 'step_description')
@@ -124,7 +124,7 @@ module.exports = {
       // 3. Add each recipe ingredient ----------------------------------------
       await knex('recipe_ingredients')
           .insert({
-            recipeId,
+            recipe_id: recipeId,
             ingredient_id: ingredient.id,
             amount: ingredient.amount,
             unit: ingredient.unit,
@@ -136,7 +136,7 @@ module.exports = {
     for (const [index, instruction] of recipe.instructions.entries()) {
       await knex('recipe_instructions')
           .insert({
-            recipeId,
+            recipe_id: recipeId,
             step: index+1,
             step_description: instruction.step_description,
           })
@@ -167,7 +167,7 @@ module.exports = {
 
     // 2. Remove existing recipe ingredients ----------------------------------
     await knex('recipe_ingredients')
-        .where('recipeId', '=', recipeId)
+        .where('recipe_id', '=', recipeId)
         .del()
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
 
@@ -201,7 +201,7 @@ module.exports = {
       // 4. Update each recipe ingredient --------------------------------------
       await knex('recipe_ingredients')
           .insert({
-            recipeId,
+            recipe_id: recipeId,
             ingredient_id: ingredient.id,
             amount: ingredient.amount,
             unit: ingredient.unit,
@@ -212,7 +212,7 @@ module.exports = {
     // 5. Update each instruction ---------------------------------------------
     // Remove all current instructions
     await knex('recipe_instructions')
-        .where('recipeId', '=', recipeId)
+        .where('recipe_id', '=', recipeId)
         .del()
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
 
@@ -220,7 +220,7 @@ module.exports = {
     for (const [index, instruction] of recipe.instructions.entries()) {
       await knex('recipe_instructions')
           .insert({
-            recipeId,
+            recipe_id: recipeId,
             step: index+1,
             step_description: instruction.step_description,
           })
