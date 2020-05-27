@@ -5,7 +5,7 @@ exports.seed = function(knex) {
       .then(function() {
         // Inserts seed entries
         return knex('favourites').insert([
-          {recipe_id: 1},
+          {recipe_id: 1, username: 'philiph'},
         ]);
       });
 };

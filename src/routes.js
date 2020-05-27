@@ -13,6 +13,9 @@ module.exports = (app) => {
   app.get('/recipes',
       RecipeController.index);
 
+  app.post('/myrecipes',
+      RecipeController.indexByUsername);
+
   app.get('/recipes/:id',
       RecipeController.show);
 
@@ -23,10 +26,10 @@ module.exports = (app) => {
       RecipeController.put);
 
 
-  app.get('/favourites',
+  app.post('/favourites',
       FavouriteController.index);
 
-  app.get('/favourites/:recipe_id',
+  app.post('/favourites/:recipe_id',
       FavouriteController.show);
 
   app.post('/favourites/:recipe_id',

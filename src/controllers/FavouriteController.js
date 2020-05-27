@@ -18,7 +18,9 @@ module.exports = {
   async index(req, res) {
     const rows = await knex('recipes')
         .whereIn('id', function() {
-          this.select('recipe_id').from('favourites');
+          this.select('recipe_id')
+              .where({username: req.body.username})
+              .from('favourites');
         })
         .catch((err) => sendInternalError(res, err, 'Favourite.index'));
     if (!rows) return;
@@ -28,7 +30,10 @@ module.exports = {
 
   async show(req, res) {
     const rows = await knex('favourites')
-        .where({recipe_id: req.params.recipe_id})
+        .where({
+          recipe_id: req.params.recipe_id,
+          username: req.body.username,
+        })
         .select()
         .catch((err) => sendInternalError(res, err, 'Favourite.index'));
     if (!rows) return;

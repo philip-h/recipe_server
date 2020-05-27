@@ -23,6 +23,18 @@ module.exports = {
     res.send(rows);
   },
 
+  // Get all recipes by logged in user
+  async indexByUsername(req, res) {
+    const rows =
+    await knex('recipes')
+        .where({username: req.body.username})
+        .select()
+        .catch((err) => sendInternalError(res, err, 'Recipe.index'));
+    if (!rows) return;
+
+    res.send(rows);
+  },
+
   // Show a whole recipe
   async show(req, res) {
     const id = req.params.id;
@@ -31,7 +43,7 @@ module.exports = {
     const recipeInfo = await
     knex('recipes')
         .where({id})
-        .select('name', 'image_url')
+        .select('name', 'image_url', 'username')
         .first()
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     if (!recipeInfo) return;
@@ -87,6 +99,7 @@ module.exports = {
         .insert({
           name: recipe.recipeInfo.name,
           image_url: recipe.recipeInfo.image_url,
+          username: recipe.recipeInfo.username,
         })
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     if (!id) return;
@@ -143,7 +156,7 @@ module.exports = {
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     }
 
-    res.status(201).send();
+    res.status(201).send({recipeId});
   },
 
   // Update a new recipe
@@ -162,6 +175,7 @@ module.exports = {
         .update({
           name: recipe.recipeInfo.name,
           image_url: recipe.recipeInfo.image_url,
+          username: recipe.recipeInfo.username,
         })
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
 
@@ -226,6 +240,6 @@ module.exports = {
           })
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     }
-    res.status(201).send();
+    res.sendStatus(201);
   },
 };
