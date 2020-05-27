@@ -49,12 +49,13 @@ module.exports = {
     const hashedPassword = await hashPassword(password);
     const userId = await
     knex('users')
+        .returning('id')
         .insert({
           username,
           password: hashedPassword,
         })
         .catch((err) => sendInternalError(res, err, 'Authentication.register'));
-    if (!userId) return;
+    if (!userId || !userId.length) return;
 
     const user = await
     knex('users')
