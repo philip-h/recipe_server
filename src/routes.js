@@ -1,7 +1,15 @@
+const AuthenticationController =
+  require('./controllers/AuthenticationController');
 const RecipeController = require('./controllers/RecipeController');
 const FavouriteController = require('./controllers/FavouriteController');
 
 module.exports = (app) => {
+  app.get('/register',
+      AuthenticationController.register);
+
+  app.get('/login',
+      AuthenticationController.login);
+
   app.get('/recipes',
       RecipeController.index);
 
