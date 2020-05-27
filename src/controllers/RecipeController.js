@@ -18,6 +18,7 @@ module.exports = {
   async index(req, res) {
     const rows = await knex('recipes').select()
         .catch((err) => sendInternalError(res, err, 'Recipe.index'));
+    if (!rowws) return;
 
     res.send(rows);
   },
@@ -33,6 +34,7 @@ module.exports = {
         .select('name', 'image_url')
         .first()
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
+    if (!recipeInfo) return;
 
     const ingredients = await
     knex('recipe_ingredients')
@@ -45,6 +47,7 @@ module.exports = {
         .where({recipeId: id})
         .select('amount', 'unit', 'name')
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
+    if (!ingredients) return;
 
 
     const instructions = await
@@ -58,6 +61,7 @@ module.exports = {
         .where({id})
         .select('step', 'step_description')
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
+    if (!instructions) return;
 
     const recipe = {
       recipeInfo,
@@ -85,6 +89,7 @@ module.exports = {
           image_url: recipe.recipeInfo.image_url,
         })
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
+    if (!id) return;
 
     const recipeId = id[0];
 

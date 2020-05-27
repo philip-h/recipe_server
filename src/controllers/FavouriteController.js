@@ -21,6 +21,7 @@ module.exports = {
           this.select('recipe_id').from('favourites');
         })
         .catch((err) => sendInternalError(res, err, 'Favourite.index'));
+    if (!rows) return;
 
     res.send(rows);
   },
@@ -30,6 +31,7 @@ module.exports = {
         .where({recipe_id: req.params.recipe_id})
         .select()
         .catch((err) => sendInternalError(res, err, 'Favourite.index'));
+    if (!rows) return;
 
     res.send(rows);
   },
