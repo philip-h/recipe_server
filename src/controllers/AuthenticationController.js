@@ -54,8 +54,20 @@ module.exports = {
           password: hashedPassword,
         })
         .catch((err) => sendInternalError(res, err, 'Authentication.register'));
+    if (!userId) return;
 
-    res.send(userId);
+    const user = await
+    knex('users')
+        .where({id: userId[0]})
+        .select()
+        .first()
+        .catch((err) => sendInternalError(res, err, 'Authentication.register'));
+    if (!user) return;
+
+    res.send({
+      username: user.username,
+      token: jwtSignUser(user),
+    });
   },
 
   async login(req, res) {
@@ -68,19 +80,21 @@ module.exports = {
         .catch((err) => sendInternalError(res, err, 'Authentication.login'));
 
     if (!user) {
-      return res.status(403).send({
+      res.status(403).send({
         error: 'Login information was incorect',
       });
+      return;
     }
 
     if (!bcrypt.compare(password, user.password)) {
-      return res.status(403).send({
+      res.status(403).send({
         error: 'Login information was incorrect',
       });
+      return;
     }
 
     res.send({
-      user,
+      username: user.username,
       token: jwtSignUser(user),
     });
   },
