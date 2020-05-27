@@ -4,10 +4,10 @@ const RecipeController = require('./controllers/RecipeController');
 const FavouriteController = require('./controllers/FavouriteController');
 
 module.exports = (app) => {
-  app.get('/register',
+  app.post('/register',
       AuthenticationController.register);
 
-  app.get('/login',
+  app.post('/login',
       AuthenticationController.login);
 
   app.get('/recipes',
