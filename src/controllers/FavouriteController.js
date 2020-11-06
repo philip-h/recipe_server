@@ -35,7 +35,7 @@ module.exports = {
           username: req.body.username,
         })
         .select()
-        .catch((err) => sendInternalError(res, err, 'Favourite.index'));
+        .catch((err) => sendInternalError(res, err, 'Favourite.show'));
     if (!rows) return;
 
     res.send(rows);
@@ -43,8 +43,11 @@ module.exports = {
 
   async post(req, res) {
     await knex('favourites')
-        .insert( {recipe_id: req.params.recipe_id} )
-        .catch((err) => sendInternalError(res, err, 'Favourite.index'));
+        .insert({
+          recipe_id: req.params.recipe_id,
+          username: req.body.username,
+        })
+        .catch((err) => sendInternalError(res, err, 'Favourite.post'));
 
     res.sendStatus(201);
   },
@@ -53,7 +56,7 @@ module.exports = {
     await knex('favourites')
         .where({recipe_id: req.params.recipe_id})
         .del()
-        .catch((err) => sendInternalError(res, err, 'Favourite.index'));
+        .catch((err) => sendInternalError(res, err, 'Favourite.delete'));
 
     res.sendStatus(203);
   },
