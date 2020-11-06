@@ -8,12 +8,12 @@ exports.seed = function(knex) {
           {
             name: 'Brownies',
             image_url: 'https://cdn.pixabay.com/photo/2016/03/04/03/42/fudge-brownies-1235430_960_720.jpg',
-            username: 'philiph',
+            user_id: 1,
           },
           {
             name: 'Chocolate Chip Cookies',
             image_url: 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Chocolate_Chip_Cookies_-_kimberlykv.jpg',
-            username: 'philiph',
+            user_id: 1,
           },
         ]);
       });

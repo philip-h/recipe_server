@@ -6,8 +6,13 @@ exports.up = function(knex) {
     table.text('amount').notNull();
     table.text('unit').notNull();
 
-    table.foreign('recipe_id').references('id').inTable('recipes');
-    table.foreign('ingredient_id').references('id').inTable('ingredients');
+    table.foreign('recipe_id').references('id').inTable('recipes')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
+
+    table.foreign('ingredient_id').references('id').inTable('ingredients')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
   });
 };
 

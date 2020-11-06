@@ -5,7 +5,9 @@ exports.up = function(knex) {
     table.integer('step').notNull();
     table.text('step_description').notNull();
 
-    table.foreign('recipe_id').references('id').inTable('recipes');
+    table.foreign('recipe_id').references('id').inTable('recipes')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
   });
 };
 

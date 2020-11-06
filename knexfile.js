@@ -3,17 +3,22 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
+    client: 'postgresql',
     connection: {
-      filename: './dev.sqlite3'
+      host: 'localhost',
+      user: 'philiph',
+      database: 'testdatabase',
     },
-    useNullAsDefault: true,
+    pool: {
+      min: 2,
+      max: 10,
+    },
     migrations: {
       directory: './src/db/migrations',
     },
     seeds: {
-      directory: './src/db/seeds'
-    }
+      directory: './src/db/seeds',
+    },
   },
 
   production: {
@@ -21,14 +26,13 @@ module.exports = {
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
       directory: './src/db/migrations',
     },
     seeds: {
-      directory: './src/db/seeds'
-    }
-  }
-
+      directory: './src/db/seeds',
+    },
+  },
 };

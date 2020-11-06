@@ -4,9 +4,11 @@ exports.up = function(knex) {
     table.increments();
     table.text('name').notNull();
     table.text('image_url');
-    table.text('username').notNull();
+    table.integer('user_id').notNull();
 
-    table.foreign('username').references('username').inTable('users');
+    table.foreign('user_id').references('id').inTable('users')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
   });
 };
 
