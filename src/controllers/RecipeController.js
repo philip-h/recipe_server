@@ -1,22 +1,17 @@
 const knex = require('../db/knex');
-
-/**
- * Sends a status 500 error through std response
- *
- * @param {Object} res - A response object
- * @param {String} err - Error message;
- * @param {String} method - The method name where the error occurred;
- */
-function sendInternalError(res, err, method) {
-  res.status(500).send({
-    error: `${method} internal error: ${err}`,
-  });
-}
+const {sendInternalError, verifyUser} = require('../utils.js');
 
 module.exports = {
   // Get all recipes
   async index(req, res) {
-    const rows = await knex('recipes').select()
+    const rows = await knex('recipes')
+        .join(
+            'users',
+            'recipes.user_id',
+            '=',
+            'users.id',
+        )
+        .select('recipes.id', 'name', 'image_url', 'username')
         .catch((err) => sendInternalError(res, err, 'Recipe.index'));
     if (!rows) return;
 
@@ -25,10 +20,17 @@ module.exports = {
 
   // Get all recipes by logged in user
   async indexByUsername(req, res) {
+    const userId = verifyUser(req, res);
     const rows =
     await knex('recipes')
-        .where({username: req.body.username})
-        .select()
+        .join(
+            'users',
+            'recipes.user_id',
+            '=',
+            'users.id',
+        )
+        .where({user_id: userId})
+        .select('recipes.id', 'name', 'image_url', 'username')
         .catch((err) => sendInternalError(res, err, 'Recipe.index'));
     if (!rows) return;
 
@@ -42,7 +44,13 @@ module.exports = {
     // Get Recipe Info
     const recipeInfo = await
     knex('recipes')
-        .where({id})
+        .join(
+            'users',
+            'recipes.user_id',
+            '=',
+            'users.id',
+        )
+        .where('recipes.id', '=', id )
         .select('name', 'image_url', 'username')
         .first()
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
@@ -91,6 +99,7 @@ module.exports = {
   // 4. Add each instruction
   async post(req, res) {
     const recipe = req.body.recipe;
+    const userId = verifyUser(req, res);
 
     // 1. Add recipe to the recipes table -------------------------------------
     const id = await
@@ -99,7 +108,7 @@ module.exports = {
         .insert({
           name: recipe.recipeInfo.name,
           image_url: recipe.recipeInfo.image_url,
-          username: recipe.recipeInfo.username,
+          user_id: userId,
         })
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     if (!id) return;
@@ -168,6 +177,7 @@ module.exports = {
   async put(req, res) {
     const recipe = req.body.recipe;
     const recipeId = req.params.id;
+    const userId = verifyUser(req, res);
 
     // 1. Update recipe in recipes table -------------------------------------
     await knex('recipes')
@@ -175,7 +185,7 @@ module.exports = {
         .update({
           name: recipe.recipeInfo.name,
           image_url: recipe.recipeInfo.image_url,
-          username: recipe.recipeInfo.username,
+          user_id: userId,
         })
         .catch((err) => sendInternalError(res, err, 'Recipe.post'));
 

@@ -26,13 +26,13 @@ module.exports = (app) => {
       RecipeController.put);
 
 
-  app.post('/favourites',
+  app.get('/favourites',
       FavouriteController.index);
 
-  app.post('/favourites/:recipe_id',
+  app.get('/favourites/:recipe_id',
       FavouriteController.show);
 
-  app.post('/favourites/u/:recipe_id',
+  app.post('/favourites/:recipe_id',
       FavouriteController.post);
 
   app.delete('/favourites/:recipe_id',
