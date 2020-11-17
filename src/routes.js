@@ -25,6 +25,8 @@ module.exports = (app) => {
   app.put('/recipes/:id',
       RecipeController.put);
 
+  app.delete('/recipes/:id',
+      RecipeController.delete);
 
   app.get('/favourites',
       FavouriteController.index);

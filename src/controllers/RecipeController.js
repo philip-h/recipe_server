@@ -252,4 +252,11 @@ module.exports = {
     }
     res.sendStatus(201);
   },
+
+  async delete(req, res) {
+    const id = req.params.id;
+    await knex('recipes').where({id}).del();
+
+    res.sendStatus(204);
+  },
 };
