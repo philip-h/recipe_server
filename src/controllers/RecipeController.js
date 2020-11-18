@@ -120,7 +120,7 @@ module.exports = {
     // Either way, we will need all the ids of the ingredients for the next step
     for (const ingredient of recipe.ingredients) {
       let id = await knex('ingredients')
-          .where({name: ingredient.name})
+          .where({name: ingredient.name.toLowerCase()})
           .select('id')
           .first()
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
@@ -135,7 +135,7 @@ module.exports = {
       } else {
         id = await knex('ingredients')
             .returning('id')
-            .insert({name: ingredient.name})
+            .insert({name: ingredient.name.toLowerCase()})
             .catch((err) => sendInternalError(res, err, 'Recipe.post'));
 
         id = id[0];
@@ -149,7 +149,7 @@ module.exports = {
             recipe_id: recipeId,
             ingredient_id: ingredient.id,
             amount: ingredient.amount,
-            unit: ingredient.unit,
+            unit: ingredient.unit.toLowerCase(),
           })
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     }
@@ -200,7 +200,7 @@ module.exports = {
     // Either way, we will need all the ids of the ingredients for the next step
     for (const ingredient of recipe.ingredients) {
       let id = await knex('ingredients')
-          .where({name: ingredient.name})
+          .where({name: ingredient.name.toLowerCase()})
           .select('id')
           .first()
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
@@ -215,7 +215,7 @@ module.exports = {
       } else {
         id = await knex('ingredients')
             .returning('id')
-            .insert({name: ingredient.name})
+            .insert({name: ingredient.name.toLowerCase()})
             .catch((err) => sendInternalError(res, err, 'Recipe.post'));
         id = id[0];
       }
@@ -228,7 +228,7 @@ module.exports = {
             recipe_id: recipeId,
             ingredient_id: ingredient.id,
             amount: ingredient.amount,
-            unit: ingredient.unit,
+            unit: ingredient.unit.toLowerCase(),
           })
           .catch((err) => sendInternalError(res, err, 'Recipe.post'));
     }
