@@ -1,6 +1,7 @@
 const AuthenticationController =
   require('./controllers/AuthenticationController');
 const RecipeController = require('./controllers/RecipeController');
+const IngredientController = require('./controllers/IngredientController');
 const FavouriteController = require('./controllers/FavouriteController');
 
 module.exports = (app) => {
@@ -27,6 +28,9 @@ module.exports = (app) => {
 
   app.delete('/recipes/:id',
       RecipeController.delete);
+
+  app.get('/ingredients',
+      IngredientController.index);
 
   app.get('/favourites',
       FavouriteController.index);
